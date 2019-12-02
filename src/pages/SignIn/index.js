@@ -1,7 +1,9 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Input, Form } from '@rocketseat/unform';
 import * as Yup from 'yup';
+
+// import { FaSpinner } from 'react-icons/fa';
 
 import { signInRequest } from '../../store/modules/auth/actions';
 
@@ -16,6 +18,7 @@ const schema = Yup.object().shape({
 
 export default function SignIn() {
   const dispatch = useDispatch();
+  const loading = useSelector(state => state.auth.loading);
 
   function handleSubmit({ email, password }) {
     dispatch(signInRequest(email, password));
@@ -30,7 +33,9 @@ export default function SignIn() {
         <Input id="email" type="email" name="email" />
         <label htmlFor="password">SUA SENHA</label>
         <Input name="password" type="password" />
-        <button type="submit">Entrar no sistema</button>
+        <button type="submit">
+          {loading ? 'Carregando...' : 'Entrar no sistema'}
+        </button>
       </Form>
     </>
   );

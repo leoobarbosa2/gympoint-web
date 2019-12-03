@@ -1,0 +1,42 @@
+import styled from 'styled-components';
+
+import searchlogo from '../../assets/images/search.svg';
+
+export const Container = styled.div`
+  div {
+    max-width: 1000px;
+    margin: 40px auto 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    span {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    aside {
+      display: flex;
+      a {
+        font-weight: bold;
+        border-radius: 4px;
+        padding: 10px 15px;
+        background: ${props => (props.back ? '#c4c4c4' : '#ee4d64')};
+        color: #fff;
+        border: none;
+        margin-right: 10px;
+
+        svg {
+          margin-right: 5px;
+        }
+      }
+      input {
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        padding: 0 35px;
+        width: 220px;
+        background: #fff url(${searchlogo}) no-repeat 10px;
+        border-radius: 4px;
+      }
+    }
+  }
+`;

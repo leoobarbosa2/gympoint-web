@@ -2,10 +2,11 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   padding: 0 30px;
+  background: #fff;
 `;
 
 export const Nav = styled.nav`
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
   height: 64px;
   display: flex;
@@ -22,7 +23,7 @@ export const Nav = styled.nav`
       border-left: 1px solid rgba(0, 0, 0, 0.2);
 
       li {
-        margin-left: 15px;
+        margin: 0 10px;
 
         a {
           color: #999999;

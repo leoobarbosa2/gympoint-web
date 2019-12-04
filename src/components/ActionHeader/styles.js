@@ -21,7 +21,7 @@ export const Container = styled.div`
         font-weight: bold;
         border-radius: 4px;
         padding: 10px 15px;
-        background: ${props => (props.back ? '#c4c4c4' : '#ee4d64')};
+        background: #ee4d64;
         color: #fff;
         border: none;
         margin-right: 10px;
@@ -36,6 +36,16 @@ export const Container = styled.div`
         width: 220px;
         background: #fff url(${searchlogo}) no-repeat 10px;
         border-radius: 4px;
+      }
+
+      button {
+        font-weight: bold;
+        border-radius: 4px;
+        padding: 10px 15px;
+        background: #40e0d0;
+        color: #fff;
+        border: none;
+        margin-right: 10px;
       }
     }
   }

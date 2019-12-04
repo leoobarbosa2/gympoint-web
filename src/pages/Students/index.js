@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaPlus } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 import api from '../../services/api';
-
-// import { Container } from './styles';
 
 import ActionContainer from '../../components/ActionContainer';
 import ActionHeader from '../../components/ActionHeader';
@@ -20,6 +19,20 @@ export default function Students() {
 
     getStudents();
   }, []);
+
+  async function handleDelete(id) {
+    try {
+      await api.delete(`/student/${id}`);
+
+      const updatedList = students.filter(student => student.id !== id);
+
+      setStudents(updatedList);
+
+      toast.success('The student and his information have been deleted');
+    } catch (err) {
+      toast.error(err.response.data.error);
+    }
+  }
 
   return (
     <>
@@ -51,10 +64,15 @@ export default function Students() {
                 <td>{student.email}</td>
                 <td>{student.age}</td>
                 <td>
-                  <Link to="/">editar</Link>
+                  <Link to={`/edit/students/${student.id}`}>editar</Link>
                 </td>
                 <td>
-                  <button type="button">apagar</button>
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(student.id)}
+                  >
+                    apagar
+                  </button>
                 </td>
               </tr>
             ))}

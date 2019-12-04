@@ -6,6 +6,7 @@ export const Container = styled.div`
   margin-top: 40px;
   background: #fff;
   padding: 20px 40px;
+  border-radius: 4px;
 `;
 
 export const Content = styled.div`
@@ -44,9 +45,17 @@ export const Content = styled.div`
   }
 
   form {
+    margin-bottom: 10px;
     display: flex;
     flex-direction: column;
     width: 100%;
+
+    span {
+      color: #ee4d64;
+      align-self: flex-start;
+      margin: 4px 0 0 1px;
+      font-weight: bold;
+    }
 
     label {
       font-size: 18px;

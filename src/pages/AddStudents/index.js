@@ -1,12 +1,12 @@
 import React from 'react';
 import * as Yup from 'yup';
-import { Form, Input } from '@rocketseat/unform';
+import { Input, Form } from '@rocketseat/unform';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
 
 import ActionHeader from '../../components/ActionHeader';
-import ActionContainer from '../../components/ActionContainer';
+import ActionContent from '../../components/ActionContent';
 
 const schema = Yup.object().shape({
   name: Yup.string().required('O nome é obrigatório'),
@@ -57,18 +57,18 @@ export default function AddStudents() {
           </aside>
         </div>
       </ActionHeader>
-      <ActionContainer>
+      <ActionContent>
         <Form schema={schema} onSubmit={handleSubmit} id="students-form">
           <label htmlFor="name">NOME COMPLETO</label>
           <Input name="name" type="text" placeholder="Nome completo" />
           <label htmlFor="name">ENDEREÇO DE E-MAIL</label>
           <Input name="email" type="email" placeholder="exemplo@email.com" />
-          <div>
-            <div>
+          <div className="wrapper">
+            <div className="organize">
               <label htmlFor="name">IDADE</label>
               <Input name="age" type="number" placeholder="Informe a idade" />
             </div>
-            <div>
+            <div className="organize">
               <label htmlFor="name">PESO (em kg)</label>
               <Input
                 name="weight"
@@ -77,18 +77,18 @@ export default function AddStudents() {
                 placeholder="Peso(em kg)"
               />
             </div>
-            <div>
+            <div className="organize">
               <label htmlFor="name">ALTURA</label>
               <Input
                 name="height"
                 type="number"
-                step="0.10"
+                step="0.01"
                 placeholder="Informe a altura"
               />
             </div>
           </div>
         </Form>
-      </ActionContainer>
+      </ActionContent>
     </>
   );
 }

@@ -21,7 +21,7 @@ export function* signIn({ payload }) {
 
     yield put(signInSuccess(token, user));
 
-    toast.success('Successfully logged in');
+    toast.success('Bem vindo!');
 
     history.push('/students');
   } catch (err) {

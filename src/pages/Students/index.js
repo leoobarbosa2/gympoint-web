@@ -4,17 +4,22 @@ import { FaPlus } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
 
-import ActionContainer from '../../components/ActionContainer';
+import ActionContent from '../../components/ActionContent';
 import ActionHeader from '../../components/ActionHeader';
+import DefaultTable from '../../components/DefaultTable';
 
 export default function Students() {
   const [students, setStudents] = useState([]);
 
   useEffect(() => {
     async function getStudents() {
-      const response = await api.get('students');
+      try {
+        const response = await api.get('students');
 
-      setStudents(response.data);
+        setStudents(response.data);
+      } catch (err) {
+        toast.error('Nenhum aluno foi encontrado');
+      }
     }
 
     getStudents();
@@ -28,7 +33,7 @@ export default function Students() {
 
       setStudents(updatedList);
 
-      toast.success('The student and his information have been deleted');
+      toast.success('O estudante e todos os seus dados foram excluídos');
     } catch (err) {
       toast.error(err.response.data.error);
     }
@@ -40,7 +45,7 @@ export default function Students() {
         <div>
           <span>Gerenciando Alunos</span>
           <aside>
-            <Link to="/register">
+            <Link to="/register/students">
               <FaPlus size={13} color="#fff" />
               CADASTRAR
             </Link>
@@ -48,8 +53,8 @@ export default function Students() {
           </aside>
         </div>
       </ActionHeader>
-      <ActionContainer>
-        <table>
+      <ActionContent>
+        <DefaultTable>
           <thead>
             <tr>
               <th>Nome</th>
@@ -77,8 +82,8 @@ export default function Students() {
               </tr>
             ))}
           </tbody>
-        </table>
-      </ActionContainer>
+        </DefaultTable>
+      </ActionContent>
     </>
   );
 }

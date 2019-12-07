@@ -5,7 +5,7 @@ import { Form, Input } from '@rocketseat/unform';
 import { Link, useParams } from 'react-router-dom';
 import api from '../../services/api';
 
-import ActionContainer from '../../components/ActionContainer';
+import ActionContent from '../../components/ActionContent';
 import ActionHeader from '../../components/ActionHeader';
 
 const schema = Yup.object().shape({
@@ -70,7 +70,7 @@ export default function EditStudent() {
           </aside>
         </div>
       </ActionHeader>
-      <ActionContainer>
+      <ActionContent>
         <Form
           onSubmit={handleSubmit}
           initialData={studentData}
@@ -81,12 +81,12 @@ export default function EditStudent() {
           <Input name="name" type="text" placeholder="Nome completo" />
           <label htmlFor="name">ENDEREÇO DE E-MAIL</label>
           <Input name="email" type="email" placeholder="exemplo@email.com" />
-          <div>
-            <div>
+          <div className="wrapper">
+            <div className="organize">
               <label htmlFor="name">IDADE</label>
               <Input name="age" type="number" placeholder="Informe a idade" />
             </div>
-            <div>
+            <div className="organize">
               <label htmlFor="name">PESO (em kg)</label>
               <Input
                 name="weight"
@@ -95,18 +95,18 @@ export default function EditStudent() {
                 placeholder="Peso(em kg)"
               />
             </div>
-            <div>
+            <div className="organize">
               <label htmlFor="name">ALTURA</label>
               <Input
                 name="height"
                 type="number"
-                step="0.10"
+                step="0.01"
                 placeholder="Informe a altura"
               />
             </div>
           </div>
         </Form>
-      </ActionContainer>
+      </ActionContent>
     </>
   );
 }

@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
 import Datepicker from 'react-datepicker';
-import Select from 'react-select';
-import AsyncSelect from 'react-select/async';
+import { Form, Select } from '@rocketseat/unform';
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
 
 import ActionHeader from '../../components/ActionHeader';
+import DateInput from './DateInput';
+import SelectInput from './SelectInput';
 import ActionContent from '../../components/ActionContent';
 
 export default function AddRegistration() {
-  const [studentId, setStudentId] = useState(null);
-  const [studentName, setStudentName] = useState('');
-  const [selectedPlan, setSelectedPlan] = useState(null);
   const [planOptions, setPlanOptions] = useState([]);
   const [dateOption, setDateOption] = useState(new Date());
 
@@ -21,8 +19,8 @@ export default function AddRegistration() {
       const response = await api.get('plans');
 
       const data = response.data.map(plan => ({
-        value: plan.id,
-        label: plan.title,
+        id: plan.id,
+        title: plan.title,
       }));
 
       setPlanOptions(data);
@@ -30,25 +28,8 @@ export default function AddRegistration() {
     getPlans();
   }, []);
 
-  async function loadStudents() {
-    const response = await api.get(`students?name=${studentName}`);
-
-    return response.data;
-  }
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-
-    try {
-      api.post(`registrations/${studentId}`, {
-        start_date: dateOption,
-        plan_id: selectedPlan,
-      });
-
-      toast.success('Matricula efetuada com sucesso');
-    } catch (err) {
-      toast.error(err.response.data.error);
-    }
+  async function handleSubmit(data) {
+    console.log(data);
   }
 
   return (
@@ -65,31 +46,19 @@ export default function AddRegistration() {
         </div>
       </ActionHeader>
       <ActionContent>
-        <form onSubmit={e => handleSubmit(e)} id="registration-form">
+        <Form onSubmit={handleSubmit} id="registration-form">
           <label>ALUNO</label>
-          <AsyncSelect
-            cacheOptions
-            getOptionValue={option => option.id}
-            getOptionLabel={option => option.name}
-            onInputChange={newValue => setStudentName(newValue)}
-            loadOptions={loadStudents}
-            onChange={e => setStudentId(e.id)}
-            defaultOptions
-          />
+          {/* Select personalizado */}
+          <SelectInput name="student_id" />
           <div className="wrapper">
             <div className="organize">
               <label>PLANO</label>
-              <Select
-                onChange={e => setSelectedPlan(e.value)}
-                options={planOptions}
-              />
+              <Select name="plan_id" options={planOptions} />
             </div>
             <div className="organize">
               <label>DATA DE INÍCIO</label>
-              <Datepicker
-                selected={dateOption}
-                onChange={date => setDateOption(date)}
-              />
+              {/* Input Date personalizado */}
+              <DateInput name="start_date" />
             </div>
             <div className="organize">
               <label>DATA DE TÉRMINO</label>
@@ -100,7 +69,7 @@ export default function AddRegistration() {
               <input type="number" readOnly />
             </div>
           </div>
-        </form>
+        </Form>
       </ActionContent>
     </>
   );

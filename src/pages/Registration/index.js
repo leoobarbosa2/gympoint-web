@@ -17,6 +17,7 @@ export default function Registration() {
     async function getRegistrations() {
       try {
         const response = await api.get('registrations');
+        console.log(response.data);
         const data = response.data.map(regist => ({
           ...regist,
           startDateFormatted: format(

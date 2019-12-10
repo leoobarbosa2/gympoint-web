@@ -1,26 +1,45 @@
-import React, { useEffect, useState } from 'react';
-// import { toast } from 'react-toastify';
-import Datepicker from 'react-datepicker';
-import { Form, Select } from '@rocketseat/unform';
+import React, { useEffect, useState, useMemo } from 'react';
+import { toast } from 'react-toastify';
+import { addMonths } from 'date-fns';
+import DatePicker from 'react-datepicker';
+import AsyncSelect from 'react-select/async';
+import Select from 'react-select';
 import { Link } from 'react-router-dom';
+// import { formatPrice } from '../../util/format';
 import api from '../../services/api';
 
+import { DatePickerInput, TotalInput } from './styles';
+
 import ActionHeader from '../../components/ActionHeader';
-import DateInput from './DateInput';
-import SelectInput from './SelectInput';
 import ActionContent from '../../components/ActionContent';
 
 export default function AddRegistration() {
+  const [studentSelected, setStudentSelected] = useState(null);
+  const [studentName, setStudentName] = useState('');
+  const [initialDate, setInicialDate] = useState(new Date());
+  const [planPrice, setPlanPrice] = useState(0);
+  const [planDuration, setPlanDuration] = useState(0);
+  const [planSelected, setPlanSelected] = useState({});
   const [planOptions, setPlanOptions] = useState([]);
-  const [dateOption, setDateOption] = useState(new Date());
+
+  const finalDate = useMemo(() => addMonths(initialDate, planDuration), [
+    initialDate,
+    planDuration,
+  ]);
+
+  const totalPrice = useMemo(() => planDuration * planPrice, [
+    planDuration,
+    planPrice,
+  ]);
 
   useEffect(() => {
     async function getPlans() {
       const response = await api.get('plans');
-
       const data = response.data.map(plan => ({
-        id: plan.id,
-        title: plan.title,
+        label: plan.title,
+        value: plan.id,
+        duration: plan.duration,
+        price: plan.price,
       }));
 
       setPlanOptions(data);
@@ -28,8 +47,31 @@ export default function AddRegistration() {
     getPlans();
   }, []);
 
-  async function handleSubmit(data) {
-    console.log(data);
+  function handlePlanChange(plan) {
+    setPlanDuration(plan.duration);
+    setPlanPrice(plan.price);
+    setPlanSelected(plan.value);
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    try {
+      await api.post(`registrations/${studentSelected}`, {
+        start_date: initialDate,
+        plan_id: Number(planSelected),
+      });
+
+      toast.success('Matrícula realizada com sucesso');
+    } catch (err) {
+      toast.error(err.response.data.error);
+    }
+  }
+
+  async function loadStudents() {
+    const response = await api.get(`students?name=${studentName}`);
+
+    return response.data;
   }
 
   return (
@@ -46,30 +88,48 @@ export default function AddRegistration() {
         </div>
       </ActionHeader>
       <ActionContent>
-        <Form onSubmit={handleSubmit} id="registration-form">
+        <form onSubmit={e => handleSubmit(e)} id="registration-form">
           <label>ALUNO</label>
-          {/* Select personalizado */}
-          <SelectInput name="student_id" />
+          <AsyncSelect
+            defaultOptions
+            loadOptions={loadStudents}
+            getOptionValue={option => option.id}
+            getOptionLabel={option => option.name}
+            onChange={e => setStudentSelected(e.id)}
+            onInputChange={newValue => setStudentName(newValue)}
+          />
           <div className="wrapper">
             <div className="organize">
               <label>PLANO</label>
-              <Select name="plan_id" options={planOptions} />
+              <Select
+                name="plan_id"
+                placeholder="Selecione um plano"
+                options={planOptions}
+                onChange={plan => handlePlanChange(plan)}
+              />
             </div>
             <div className="organize">
               <label>DATA DE INÍCIO</label>
-              {/* Input Date personalizado */}
-              <DateInput name="start_date" />
+              <DatePicker
+                selected={initialDate}
+                dateFormat="dd/MM/yyyy"
+                onChange={d => setInicialDate(d)}
+              />
             </div>
             <div className="organize">
               <label>DATA DE TÉRMINO</label>
-              <Datepicker readOnly />
+              <DatePickerInput
+                selected={finalDate}
+                dateFormat="dd/MM/yyyy"
+                readOnly
+              />
             </div>
             <div className="organize">
               <label>VALOR FINAL</label>
-              <input type="number" readOnly />
+              <TotalInput type="number" value={totalPrice} readOnly />
             </div>
           </div>
-        </Form>
+        </form>
       </ActionContent>
     </>
   );

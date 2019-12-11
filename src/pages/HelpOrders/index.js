@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { format, parseISO } from 'date-fns';
 import pt from 'date-fns/locale/pt';
 import { toast } from 'react-toastify';
@@ -7,14 +7,23 @@ import api from '../../services/api';
 import ActionHeader from '../../components/ActionHeader';
 import ActionContent from '../../components/ActionContent';
 import DefaultTable from '../../components/DefaultTable';
+import Modal from '../../components/Modal';
 
 export default function HelpOrders() {
+  const [visible, setVisible] = useState(false);
+  const [studentId, setStudentId] = useState(null);
   const [orders, setOrders] = useState([]);
+  const ref = useRef();
+
+  // divTarget.addEventListener('click', () => {
+  //   setVisible(false);
+  // });
 
   useEffect(() => {
     async function getOrders() {
       try {
         const response = await api.get('students/help-orders');
+        console.log(response.data);
         const data = response.data.map(order => ({
           ...order,
           formattedDate: format(
@@ -31,6 +40,12 @@ export default function HelpOrders() {
     getOrders();
   }, []);
 
+  function handleOverlayClick(event) {
+    if (event.target === ref.current) {
+      setVisible(false);
+    }
+  }
+
   return (
     <>
       <ActionHeader>
@@ -38,7 +53,7 @@ export default function HelpOrders() {
           <span>Pedidos de auxílio</span>
         </div>
       </ActionHeader>
-      <ActionContent>
+      <ActionContent ref={ref} onClick={handleOverlayClick}>
         <DefaultTable>
           <thead>
             <tr>
@@ -54,13 +69,22 @@ export default function HelpOrders() {
                 <td>{order.student_order.email}</td>
                 <td>{order.formattedDate}</td>
                 <td>
-                  <button type="button">responder</button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setStudentId(order.student_id);
+                      setVisible(true);
+                    }}
+                  >
+                    responder
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </DefaultTable>
       </ActionContent>
+      <Modal visible={visible} student_id={studentId} />
     </>
   );
 }

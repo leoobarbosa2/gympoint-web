@@ -1,40 +1,109 @@
-import React, { useEffect, useState } from 'react';
-import { parseISO } from 'date-fns';
-import { Form } from '@rocketseat/unform';
+import React, { useEffect, useState, useMemo } from 'react';
+import { toast } from 'react-toastify';
+import { parseISO, addMonths } from 'date-fns';
 import { Link, useParams } from 'react-router-dom';
-// import { formatPrice } from '../../../util/format';
+import AsyncSelect from 'react-select/async';
+import Select from 'react-select';
+import DatePicker from 'react-datepicker';
+import { formatPrice } from '../../../util/format';
 import api from '../../../services/api';
 
 import ActionHeader from '../../../components/ActionHeader';
 import ActionContent from '../../../components/ActionContent';
-import SelectInput from '../SelectInput';
-import AsyncSelectInput from '../AsyncSelectInput';
-import DateInput from '../DateInput';
 
 import { DatePickerInput, TotalInput } from '../styles';
 
 export default function EditRegistration() {
-  const [initialData, setInicialData] = useState({});
+  const [planSelected, setPlanSelected] = useState(null);
+  const [studentSelected, setStudentSelected] = useState(null);
+  const [planOptions, setPlanOptions] = useState([]);
+  const [studentName, setStudentName] = useState('');
+  const [planPrice, setPlanPrice] = useState(0);
+  const [planDuration, setPlanDuration] = useState(0);
+  const [initialDate, setInicialDate] = useState(new Date());
   const { id } = useParams();
+
+  const finalDate = useMemo(() => addMonths(initialDate, planDuration), [
+    initialDate,
+    planDuration,
+  ]);
+
+  const totalPrice = useMemo(() => formatPrice(planDuration * planPrice), [
+    planDuration,
+    planPrice,
+  ]);
 
   useEffect(() => {
     async function getRegistrationData() {
       const response = await api.get(`registrations/${id}`);
 
-      const data = {
-        ...response.data,
+      const date = {
         start_date: parseISO(response.data.start_date),
       };
-      console.log(data);
 
-      setInicialData(data);
+      const plan = {
+        label: response.data.plan.title,
+        value: response.data.plan.id,
+        price: response.data.plan.price,
+        duration: response.data.plan.duration,
+      };
+
+      setInicialDate(date.start_date);
+      setPlanSelected(plan);
+      setPlanDuration(plan.duration);
+      setPlanPrice(plan.price);
+      setStudentSelected(response.data.student);
     }
     getRegistrationData();
   }, [id]);
 
-  async function handleSubmit(data) {
-    console.log(data);
+  useEffect(() => {
+    async function getPlans() {
+      const response = await api.get('plans');
+      const data = response.data.map(plan => ({
+        label: plan.title,
+        value: plan.id,
+        duration: plan.duration,
+        price: plan.price,
+      }));
+
+      setPlanOptions(data);
+    }
+    getPlans();
+  }, []);
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    try {
+      await api.put(`registrations/${id}`, {
+        student_id: studentSelected.id,
+        plan_id: planSelected.value,
+        start_date: initialDate,
+      });
+      toast.success('Dados atualizados com sucesso!');
+    } catch (err) {
+      toast.error(err.response.data.error);
+    }
+    console.log(studentSelected.id, planSelected.value, initialDate);
   }
+
+  async function loadStudents() {
+    const response = await api.get(`students?name=${studentName}`);
+
+    return response.data;
+  }
+
+  const customStyles = {
+    option: (provided, state) => ({
+      ...provided,
+      color: state.isSelected ? 'white' : 'blue',
+    }),
+    control: styles => ({
+      ...styles,
+      width: 200,
+      marginRight: 10,
+    }),
+  };
 
   return (
     <>
@@ -50,32 +119,57 @@ export default function EditRegistration() {
         </div>
       </ActionHeader>
       <ActionContent>
-        <Form
-          initialData={initialData}
-          onSubmit={handleSubmit}
-          id="registration-form"
-        >
+        <form onSubmit={e => handleSubmit(e)} id="registration-form">
           <label htmlFor="name">ALUNO</label>
-          <AsyncSelectInput name="student_id" />
+          <AsyncSelect
+            value={studentSelected}
+            onInputChange={v => setStudentName(v)}
+            loadOptions={loadStudents}
+            getOptionValue={option => option.id}
+            getOptionLabel={option => option.name}
+            onChange={s => setStudentSelected(s)}
+            name="student_id"
+          />
           <div className="wrapper">
             <div className="organize">
               <label>PLANO</label>
-              <SelectInput name="plan_id" />
+              <Select
+                value={planSelected}
+                getOptionLabel={option => option.label}
+                getOptionValue={option => option.value}
+                onChange={p => {
+                  setPlanSelected(p);
+                  setPlanDuration(p.duration);
+                  setPlanPrice(p.price);
+                }}
+                options={planOptions}
+                styles={customStyles}
+                name="plan_id"
+              />
             </div>
             <div className="organize">
               <label>DATA DE INÍCIO</label>
-              <DateInput name="start_date" />
+              <DatePicker
+                name="start_date"
+                selected={initialDate}
+                dateFormat="dd/MM/yyyy"
+                onChange={d => setInicialDate(d)}
+              />
             </div>
             <div className="organize">
               <label>DATA DE TÉRMINO</label>
-              <DatePickerInput dateFormat="dd/MM/yyyy" readOnly />
+              <DatePickerInput
+                selected={finalDate}
+                dateFormat="dd/MM/yyyy"
+                readOnly
+              />
             </div>
             <div className="organize">
               <label>VALOR FINAL</label>
-              <TotalInput readOnly />
+              <TotalInput value={totalPrice} readOnly />
             </div>
           </div>
-        </Form>
+        </form>
       </ActionContent>
     </>
   );

@@ -17,7 +17,6 @@ export default function Registration() {
     async function getRegistrations() {
       try {
         const response = await api.get('registrations');
-        console.log(response.data);
         const data = response.data.map(regist => ({
           ...regist,
           startDateFormatted: format(
@@ -43,6 +42,21 @@ export default function Registration() {
     }
     getRegistrations();
   }, []);
+
+  async function handleDelete(id) {
+    try {
+      await api.delete(`registrations/${id}`);
+
+      const updatedRegistrations = registrations.filter(
+        regist => regist.id !== id
+      );
+
+      toast.success('Matricula excluida com sucesso!');
+      setRegistrations(updatedRegistrations);
+    } catch (err) {
+      toast.error(err.response.data.error);
+    }
+  }
 
   return (
     <>
@@ -83,7 +97,12 @@ export default function Registration() {
                   <Link to={`registration/${registration.id}`}>editar</Link>
                 </td>
                 <td>
-                  <button type="button">apagar</button>
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(registration.id)}
+                  >
+                    apagar
+                  </button>
                 </td>
               </tr>
             ))}

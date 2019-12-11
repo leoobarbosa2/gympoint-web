@@ -3,7 +3,7 @@ import AsyncSelect from 'react-select/async';
 import { useField } from '@rocketseat/unform';
 import api from '../../services/api';
 
-export default function AsyncSelectInput({ name }) {
+export default function AsyncSelectInput({ name, handleChange }) {
   const ref = useRef(null);
   const { fieldName, registerField, defaultValue, error } = useField(name);
   const [studentName, setStudentName] = useState('');
@@ -33,7 +33,10 @@ export default function AsyncSelectInput({ name }) {
         selected={selected}
         getOptionValue={option => option.id}
         getOptionLabel={option => option.name}
-        onChange={e => setSelected(e.id)}
+        onChange={e => {
+          setSelected(e.id);
+          handleChange(e.id);
+        }}
         defaultOptions
         onInputChange={newValue => setStudentName(newValue)}
         loadOptions={loadStudents}

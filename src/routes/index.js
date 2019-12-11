@@ -9,9 +9,9 @@ import EditStudents from '../pages/EditStudent';
 import Plans from '../pages/Plans';
 import AddPlan from '../pages/AddPlan';
 import EditPlan from '../pages/EditPlan';
-import AddRegistration from '../pages/AddRegistration';
+import AddRegistration from '../pages/Registration/AddRegistration';
 import Registration from '../pages/Registration';
-import EditRegistration from '../pages/EditRegistration';
+import EditRegistration from '../pages/Registration/EditRegistration';
 import HelpOrders from '../pages/HelpOrders';
 
 export default function Routes() {

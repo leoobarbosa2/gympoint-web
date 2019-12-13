@@ -51,6 +51,13 @@ export const Modal = styled.div`
     flex-direction: column;
     justify-content: center;
 
+    span {
+      color: #ee4d64;
+      align-self: flex-start;
+      margin: 10px 0;
+      font-weight: bold;
+    }
+
     > strong {
       display: block;
       margin: 10px 0;

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { lighten } from 'polished';
 
 export const Container = styled.div`
   padding: 0 30px;
@@ -6,7 +7,7 @@ export const Container = styled.div`
 `;
 
 export const Nav = styled.nav`
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
   height: 64px;
   display: flex;
@@ -19,8 +20,15 @@ export const Nav = styled.nav`
 
     ul {
       display: flex;
-      margin-left: 10px;
       border-left: 1px solid rgba(0, 0, 0, 0.2);
+
+      li:first-child {
+        margin-left: 20px;
+      }
+
+      .nav-link {
+        color: ${lighten(0.08, '#ee4d64')};
+      }
 
       li {
         margin: 0 10px;

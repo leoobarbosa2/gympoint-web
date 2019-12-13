@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import * as Yup from 'yup';
+import { MdKeyboardArrowLeft, MdCheck } from 'react-icons/md';
 import { toast } from 'react-toastify';
 import { Form, Input } from '@rocketseat/unform';
 import { Link, useParams } from 'react-router-dom';
@@ -58,8 +59,12 @@ export default function EditPlan() {
         <div>
           <span>Edição de Planos</span>
           <aside>
-            <Link to="/plans">VOLTAR</Link>
+            <Link className="prevPage" to="/plans">
+              <MdKeyboardArrowLeft size={20} color="#fff" />
+              VOLTAR
+            </Link>
             <button type="submit" form="plans-form">
+              <MdCheck size={20} color="#fff" />
               SALVAR
             </button>
           </aside>

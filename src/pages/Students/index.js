@@ -7,23 +7,35 @@ import api from '../../services/api';
 import ActionContent from '../../components/ActionContent';
 import ActionHeader from '../../components/ActionHeader';
 import DefaultTable from '../../components/DefaultTable';
+import PageButton from '../../components/PageButton';
+import Centralizer from '../../components/Centralizer';
 
 export default function Students() {
+  const [name, setName] = useState('');
+  const [totalPages, setTotalPages] = useState(0);
+  const [page, setPage] = useState(1);
   const [students, setStudents] = useState([]);
 
   useEffect(() => {
     async function getStudents() {
       try {
-        const response = await api.get('students');
+        const response = await api.get(`students`, {
+          params: { page, name },
+        });
 
-        setStudents(response.data);
+        if (response.data.count <= 10) {
+          setPage(1);
+        }
+
+        setTotalPages(Math.ceil(response.data.count / 10, 1));
+        setStudents(response.data.rows);
       } catch (err) {
         toast.error('Nenhum aluno foi encontrado');
       }
     }
 
     getStudents();
-  }, []);
+  }, [name, page]);
 
   async function handleDelete(id) {
     try {
@@ -49,10 +61,26 @@ export default function Students() {
               <FaPlus size={13} color="#fff" />
               CADASTRAR
             </Link>
-            <input type="search" placeholder="Buscar aluno" />
+            <input
+              type="search"
+              onChange={e => setName(e.target.value)}
+              placeholder="Buscar aluno"
+            />
           </aside>
         </div>
       </ActionHeader>
+      <Centralizer>
+        <PageButton lock={page < 2} funcPage={() => setPage(page - 1)}>
+          Anterior
+        </PageButton>
+        <span>{page}</span>
+        <PageButton
+          lock={page === totalPages}
+          funcPage={() => setPage(page + 1)}
+        >
+          Proximo
+        </PageButton>
+      </Centralizer>
       <ActionContent>
         <DefaultTable>
           <thead>

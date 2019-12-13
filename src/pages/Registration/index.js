@@ -1,23 +1,29 @@
 import React, { useEffect, useState } from 'react';
+import { MdCheckCircle } from 'react-icons/md';
 import { toast } from 'react-toastify';
+import { FaPlus } from 'react-icons/fa';
 import { format, parseISO } from 'date-fns';
 import pt from 'date-fns/locale/pt';
-import { MdCheckCircle } from 'react-icons/md';
+
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
 
 import ActionHeader from '../../components/ActionHeader';
 import ActionContent from '../../components/ActionContent';
 import DefaultTable from '../../components/DefaultTable';
+import PageButton from '../../components/PageButton';
+import Centralizer from '../../components/Centralizer';
 
 export default function Registration() {
+  const [totalPages, setTotalPages] = useState(0);
+  const [page, setpage] = useState(1);
   const [registrations, setRegistrations] = useState([]);
 
   useEffect(() => {
     async function getRegistrations() {
       try {
-        const response = await api.get('registrations');
-        const data = response.data.map(regist => ({
+        const response = await api.get(`registrations?page=${page}`);
+        const data = response.data.rows.map(regist => ({
           ...regist,
           startDateFormatted: format(
             parseISO(regist.start_date),
@@ -34,14 +40,14 @@ export default function Registration() {
             }
           ),
         }));
-
+        setTotalPages(Math.ceil(response.data.count / 10, 1));
         setRegistrations(data);
       } catch (err) {
         toast.error('Nenhuma matricula foi encontrada');
       }
     }
     getRegistrations();
-  }, []);
+  }, [page]);
 
   async function handleDelete(id) {
     try {
@@ -64,10 +70,25 @@ export default function Registration() {
         <div>
           <span>Gerenciando matrículas</span>
           <aside>
-            <Link to="/register/registration">CADASTRAR</Link>
+            <Link to="/register/registration">
+              <FaPlus size={13} color="#fff" />
+              CADASTRAR
+            </Link>
           </aside>
         </div>
       </ActionHeader>
+      <Centralizer>
+        <PageButton lock={page < 2} funcPage={() => setpage(page - 1)}>
+          Anterior
+        </PageButton>
+        <span>{page}</span>
+        <PageButton
+          lock={page === totalPages}
+          funcPage={() => setpage(page + 1)}
+        >
+          Proximo
+        </PageButton>
+      </Centralizer>
       <ActionContent>
         <DefaultTable>
           <thead>

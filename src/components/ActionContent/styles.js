@@ -1,18 +1,20 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  max-width: 1000px;
-  margin: 40px auto 0 auto;
+  max-width: 1200px;
+  margin: 10px auto 0 auto;
   background: #fff;
   padding: 20px 40px;
   border-radius: 4px;
 `;
 
 export const Content = styled.div`
+  /* height: 600px; */
   form {
+    max-width: 1000px;
     display: flex;
     flex-direction: column;
-    margin-bottom: 10px;
+    margin: 0 auto 10px auto;
 
     span {
       color: #ee4d64;

@@ -4,7 +4,7 @@ import searchlogo from '../../assets/images/search.svg';
 
 export const Container = styled.div`
   div {
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 40px auto 0 auto;
     display: flex;
     justify-content: space-between;
@@ -17,14 +17,20 @@ export const Container = styled.div`
 
     aside {
       display: flex;
+
+      a.prevPage {
+        background: #c4c4c4;
+      }
+
       a {
+        display: flex;
+        align-items: center;
         font-weight: bold;
         border-radius: 4px;
         padding: 10px 15px;
         background: #ee4d64;
         color: #fff;
         border: none;
-        margin-right: 10px;
 
         svg {
           margin-right: 5px;
@@ -36,16 +42,23 @@ export const Container = styled.div`
         width: 220px;
         background: #fff url(${searchlogo}) no-repeat 10px;
         border-radius: 4px;
+        margin-left: 10px;
       }
 
       button {
+        display: flex;
+        align-items: center;
         font-weight: bold;
+        margin-left: 10px;
         border-radius: 4px;
         padding: 10px 15px;
-        background: #40e0d0;
+        background: #ee4d64;
         color: #fff;
         border: none;
-        margin-right: 10px;
+
+        svg {
+          margin-right: 5px;
+        }
       }
     }
   }

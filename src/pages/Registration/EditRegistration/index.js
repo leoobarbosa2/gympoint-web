@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { toast } from 'react-toastify';
+import { MdKeyboardArrowLeft, MdCheck } from 'react-icons/md';
 import { parseISO, addMonths } from 'date-fns';
 import { Link, useParams } from 'react-router-dom';
 import AsyncSelect from 'react-select/async';
@@ -36,7 +37,6 @@ export default function EditRegistration() {
   useEffect(() => {
     async function getRegistrationData() {
       const response = await api.get(`registrations/${id}`);
-
       const date = {
         start_date: parseISO(response.data.start_date),
       };
@@ -60,7 +60,7 @@ export default function EditRegistration() {
   useEffect(() => {
     async function getPlans() {
       const response = await api.get('plans');
-      const data = response.data.map(plan => ({
+      const data = response.data.rows.map(plan => ({
         label: plan.title,
         value: plan.id,
         duration: plan.duration,
@@ -84,13 +84,12 @@ export default function EditRegistration() {
     } catch (err) {
       toast.error(err.response.data.error);
     }
-    console.log(studentSelected.id, planSelected.value, initialDate);
   }
 
   async function loadStudents() {
     const response = await api.get(`students?name=${studentName}`);
 
-    return response.data;
+    return response.data.rows;
   }
 
   const customStyles = {
@@ -111,8 +110,12 @@ export default function EditRegistration() {
         <div>
           <span>Edição de matrícula</span>
           <aside>
-            <Link to="/registration">VOLTAR</Link>
+            <Link className="prevPage" to="/registration">
+              <MdKeyboardArrowLeft size={20} color="#fff" />
+              VOLTAR
+            </Link>
             <button type="submit" form="registration-form">
+              <MdCheck size={20} color="#fff" />
               SALVAR
             </button>
           </aside>

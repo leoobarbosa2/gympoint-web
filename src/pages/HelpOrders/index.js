@@ -7,18 +7,22 @@ import api from '../../services/api';
 import ActionHeader from '../../components/ActionHeader';
 import ActionContent from '../../components/ActionContent';
 import DefaultTable from '../../components/DefaultTable';
+import PageButton from '../../components/PageButton';
+import Centralizer from '../../components/Centralizer';
 import Modal from '../../components/Modal';
 
 export default function HelpOrders() {
+  const [totalPages, setTotalPages] = useState(0);
+  const [page, setpage] = useState(1);
   const [visible, setVisible] = useState(false);
-  const [studentId, setStudentId] = useState(null);
+  const [orderId, setOrderId] = useState(null);
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
     async function getOrders() {
       try {
-        const response = await api.get('students/help-orders');
-        const data = response.data.map(order => ({
+        const response = await api.get(`students/help-orders?page=${page}`);
+        const data = response.data.rows.map(order => ({
           ...order,
           formattedDate: format(
             parseISO(order.created_at),
@@ -26,13 +30,19 @@ export default function HelpOrders() {
             { locale: pt }
           ),
         }));
+        setTotalPages(Math.ceil(response.data.count / 10, 1));
         setOrders(data);
       } catch (err) {
         toast.error('Ocorreu um erro ao obter os pedidos de auxílio');
       }
     }
     getOrders();
-  }, []);
+  }, [page]);
+
+  function handleOrderChange(id) {
+    const updatedOrders = orders.filter(ord => ord.id !== id);
+    setOrders(updatedOrders);
+  }
 
   return (
     <>
@@ -41,6 +51,18 @@ export default function HelpOrders() {
           <span>Pedidos de auxílio</span>
         </div>
       </ActionHeader>
+      <Centralizer>
+        <PageButton lock={page < 2} funcPage={() => setpage(page - 1)}>
+          Anterior
+        </PageButton>
+        <span>{page}</span>
+        <PageButton
+          lock={page === totalPages}
+          funcPage={() => setpage(page + 1)}
+        >
+          Proximo
+        </PageButton>
+      </Centralizer>
       <ActionContent>
         <DefaultTable>
           <thead>
@@ -60,7 +82,7 @@ export default function HelpOrders() {
                   <button
                     type="button"
                     onClick={() => {
-                      setStudentId(order.student_id);
+                      setOrderId(order.id);
                       setVisible(true);
                     }}
                   >
@@ -74,8 +96,9 @@ export default function HelpOrders() {
       </ActionContent>
       <Modal
         visible={visible}
-        student_id={studentId}
+        order_id={orderId}
         hide={() => setVisible(false)}
+        handleOrderChange={handleOrderChange}
       />
     </>
   );

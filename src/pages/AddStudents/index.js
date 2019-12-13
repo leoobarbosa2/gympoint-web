@@ -1,6 +1,7 @@
 import React from 'react';
 import * as Yup from 'yup';
 import { Input, Form } from '@rocketseat/unform';
+import { MdKeyboardArrowLeft, MdCheck } from 'react-icons/md';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
@@ -50,8 +51,12 @@ export default function AddStudents() {
         <div>
           <span>Cadastro de Alunos</span>
           <aside>
-            <Link to="/students">VOLTAR</Link>
+            <Link className="prevPage" to="/students">
+              <MdKeyboardArrowLeft size={20} color="#fff" />
+              VOLTAR
+            </Link>
             <button type="submit" form="students-form">
+              <MdCheck size={20} color="#fff" />
               SALVAR
             </button>
           </aside>

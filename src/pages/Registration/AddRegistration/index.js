@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import AsyncSelect from 'react-select/async';
+import { MdKeyboardArrowLeft, MdCheck } from 'react-icons/md';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import * as Yup from 'yup';
@@ -46,7 +47,7 @@ export default function AddRegistration() {
   useEffect(() => {
     async function getPlans() {
       const response = await api.get('plans');
-      const data = response.data.map(plan => ({
+      const data = response.data.rows.map(plan => ({
         label: plan.title,
         value: plan.id,
         duration: plan.duration,
@@ -93,7 +94,7 @@ export default function AddRegistration() {
   async function loadStudents() {
     const response = await api.get(`students?name=${studentName}`);
 
-    return response.data;
+    return response.data.rows;
   }
 
   const customStyles = {
@@ -101,7 +102,7 @@ export default function AddRegistration() {
       ...provided,
       color: state.isSelected ? 'white' : 'blue',
     }),
-    control: (styles, state) => ({
+    control: styles => ({
       ...styles,
       width: 200,
       marginRight: 10,
@@ -114,8 +115,12 @@ export default function AddRegistration() {
         <div>
           <span>Cadastro de matrícula</span>
           <aside>
-            <Link to="/registration">VOLTAR</Link>
+            <Link className="prevPage" to="/registration">
+              <MdKeyboardArrowLeft size={20} color="#fff" />
+              VOLTAR
+            </Link>
             <button type="submit" form="registration-form">
+              <MdCheck size={20} color="#fff" />
               SALVAR
             </button>
           </aside>

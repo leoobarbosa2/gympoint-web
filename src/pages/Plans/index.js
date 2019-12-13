@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
+import { FaPlus } from 'react-icons/fa';
 import { formatPrice } from '../../util/format';
 import api from '../../services/api';
 
 import ActionHeader from '../../components/ActionHeader';
 import ActionContent from '../../components/ActionContent';
 import DefaultTable from '../../components/DefaultTable';
+import Centralizer from '../../components/Centralizer';
+import PageButton from '../../components/PageButton';
 
 export default function Plans() {
+  const [totalPages, setTotalPages] = useState(0);
+  const [page, setpage] = useState(1);
   const [plans, setPlans] = useState([]);
 
   async function handleDelete(id) {
@@ -26,20 +31,21 @@ export default function Plans() {
   useEffect(() => {
     async function getPlans() {
       try {
-        const response = await api.get('plans');
+        const response = await api.get(`plans?page=${page}`);
 
-        const data = response.data.map(plan => ({
+        const data = response.data.rows.map(plan => ({
           ...plan,
           priceFormatted: formatPrice(plan.price),
         }));
 
+        setTotalPages(Math.ceil(response.data.count / 10, 1));
         setPlans(data);
       } catch (err) {
         toast.error('Nenhum plano foi encontrado');
       }
     }
     getPlans();
-  }, []);
+  }, [page]);
 
   return (
     <>
@@ -47,10 +53,25 @@ export default function Plans() {
         <div>
           <span>Gerenciando planos</span>
           <aside>
-            <Link to="/register/plan">CADASTRAR</Link>
+            <Link to="/register/plan">
+              <FaPlus size={13} color="#fff" />
+              CADASTRAR
+            </Link>
           </aside>
         </div>
       </ActionHeader>
+      <Centralizer>
+        <PageButton lock={page < 2} funcPage={() => setpage(page - 1)}>
+          Anterior
+        </PageButton>
+        <span>{page}</span>
+        <PageButton
+          lock={page === totalPages}
+          funcPage={() => setpage(page + 1)}
+        >
+          Proximo
+        </PageButton>
+      </Centralizer>
       <ActionContent>
         <DefaultTable>
           <thead>

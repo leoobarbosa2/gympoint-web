@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { parseISO, addMonths } from 'date-fns';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import { FaPlus } from 'react-icons/fa';
@@ -15,6 +16,31 @@ export default function Plans() {
   const [totalPages, setTotalPages] = useState(0);
   const [page, setpage] = useState(1);
   const [plans, setPlans] = useState([]);
+  const countMonth = ['mês', 'meses'];
+
+  useEffect(() => {
+    async function getPlans() {
+      try {
+        const response = await api.get(`plans?page=${page}`);
+
+        const data = response.data.rows.map(plan => ({
+          ...plan,
+          durationFormatted: `${
+            plan.duration < 2
+              ? `${plan.duration} ${countMonth[0]}`
+              : `${plan.duration} ${countMonth[1]}`
+          }`,
+          priceFormatted: formatPrice(plan.price),
+        }));
+
+        setTotalPages(Math.ceil(response.data.count / 10, 1));
+        setPlans(data);
+      } catch (err) {
+        toast.error('Nenhum plano foi encontrado');
+      }
+    }
+    getPlans();
+  }, [countMonth, page]);
 
   async function handleDelete(id) {
     try {
@@ -27,25 +53,6 @@ export default function Plans() {
       toast.error('Algo de errado aconteceu');
     }
   }
-
-  useEffect(() => {
-    async function getPlans() {
-      try {
-        const response = await api.get(`plans?page=${page}`);
-
-        const data = response.data.rows.map(plan => ({
-          ...plan,
-          priceFormatted: formatPrice(plan.price),
-        }));
-
-        setTotalPages(Math.ceil(response.data.count / 10, 1));
-        setPlans(data);
-      } catch (err) {
-        toast.error('Nenhum plano foi encontrado');
-      }
-    }
-    getPlans();
-  }, [page]);
 
   return (
     <>
@@ -85,7 +92,7 @@ export default function Plans() {
             {plans.map(plan => (
               <tr key={plan.id}>
                 <td>{plan.title}</td>
-                <td>{plan.duration}</td>
+                <td>{plan.durationFormatted}</td>
                 <td>{plan.priceFormatted}</td>
                 <td>
                   <Link to={`/plans/${plan.id}`}>editar</Link>

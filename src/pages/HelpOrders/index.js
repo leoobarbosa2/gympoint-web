@@ -22,6 +22,7 @@ export default function HelpOrders() {
     async function getOrders() {
       try {
         const response = await api.get(`students/help-orders?page=${page}`);
+
         const data = response.data.rows.map(order => ({
           ...order,
           formattedDate: format(

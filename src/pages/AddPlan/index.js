@@ -98,7 +98,7 @@ export default function AddPlan() {
                 name="totalPrice"
                 type="number"
                 value={totalCalculated}
-                step="0.01"
+                step="0.1"
                 placeholder="Valor total calculado"
                 readOnly
               />

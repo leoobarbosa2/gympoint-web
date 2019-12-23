@@ -39,4 +39,8 @@ export default createGlobalStyle`
   button {
     cursor: pointer;
   }
+
+  .readOnly {
+    background: #eee;
+  }
 `;

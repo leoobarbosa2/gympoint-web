@@ -21,7 +21,9 @@ export default function HelpOrders() {
   useEffect(() => {
     async function getOrders() {
       try {
-        const response = await api.get(`students/help-orders?page=${page}`);
+        const response = await api.get(`help-orders/students`, {
+          params: { page },
+        });
 
         const data = response.data.rows.map(order => ({
           ...order,

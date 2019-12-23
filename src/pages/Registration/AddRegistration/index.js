@@ -10,8 +10,6 @@ import { Link } from 'react-router-dom';
 import { formatPrice } from '../../../util/format';
 import api from '../../../services/api';
 
-import { DatePickerInput, TotalInput } from '../styles';
-
 import ActionHeader from '../../../components/ActionHeader';
 import ActionContent from '../../../components/ActionContent';
 
@@ -169,7 +167,8 @@ export default function AddRegistration() {
             </div>
             <div className="organize">
               <label>DATA DE TÉRMINO</label>
-              <DatePickerInput
+              <DatePicker
+                className="readOnly"
                 selected={finalDate}
                 dateFormat="dd/MM/yyyy"
                 readOnly
@@ -177,7 +176,7 @@ export default function AddRegistration() {
             </div>
             <div className="organize">
               <label>VALOR FINAL</label>
-              <TotalInput value={totalPrice} readOnly />
+              <input className="readOnly" value={totalPrice} readOnly />
             </div>
           </div>
         </form>

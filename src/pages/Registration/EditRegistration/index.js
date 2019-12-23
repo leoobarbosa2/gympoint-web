@@ -12,8 +12,6 @@ import api from '../../../services/api';
 import ActionHeader from '../../../components/ActionHeader';
 import ActionContent from '../../../components/ActionContent';
 
-import { DatePickerInput, TotalInput } from '../styles';
-
 export default function EditRegistration() {
   const [planSelected, setPlanSelected] = useState(null);
   const [studentSelected, setStudentSelected] = useState(null);
@@ -161,7 +159,8 @@ export default function EditRegistration() {
             </div>
             <div className="organize">
               <label>DATA DE TÉRMINO</label>
-              <DatePickerInput
+              <DatePicker
+                className="readOnly"
                 selected={finalDate}
                 dateFormat="dd/MM/yyyy"
                 readOnly
@@ -169,7 +168,7 @@ export default function EditRegistration() {
             </div>
             <div className="organize">
               <label>VALOR FINAL</label>
-              <TotalInput value={totalPrice} readOnly />
+              <input className="readOnly" value={totalPrice} readOnly />
             </div>
           </div>
         </form>

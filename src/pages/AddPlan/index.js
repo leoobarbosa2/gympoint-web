@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { MdKeyboardArrowLeft, MdCheck } from 'react-icons/md';
 import { Form, Input } from '@rocketseat/unform';
 import { Link } from 'react-router-dom';
+import { formatPrice } from '../../util/format';
 import api from '../../services/api';
 
 import ActionHeader from '../../components/ActionHeader';
@@ -24,7 +25,7 @@ export default function AddPlan() {
   const [planPrice, setPlanPrice] = useState(0);
   const [planDuration, setPlanDuration] = useState(0);
 
-  const totalCalculated = useMemo(() => planDuration * planPrice, [
+  const totalCalculated = useMemo(() => formatPrice(planDuration * planPrice), [
     planDuration,
     planPrice,
   ]);
@@ -96,9 +97,8 @@ export default function AddPlan() {
               <label>PREÇO TOTAL</label>
               <input
                 name="totalPrice"
-                type="number"
                 value={totalCalculated}
-                step="0.1"
+                className="readOnly"
                 placeholder="Valor total calculado"
                 readOnly
               />

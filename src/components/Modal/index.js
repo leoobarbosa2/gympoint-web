@@ -22,7 +22,7 @@ export default function ModalAnswer({
   useEffect(() => {
     async function getHelpOrderInfo() {
       if (visible) {
-        const response = await api.get(`/students/help-orders/${order_id}`);
+        const response = await api.get(`help-orders/students/${order_id}`);
         const { question } = response.data;
         setStudentQuestion(question);
       }

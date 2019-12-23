@@ -104,7 +104,7 @@ export default function Registration() {
             {registrations.map(registration => (
               <tr key={registration.id}>
                 <td>{registration.student.name}</td>
-                <td>{registration.plan.title}</td>
+                <td>{registration.plan.title || 'Sem plano'}</td>
                 <td>{registration.startDateFormatted}</td>
                 <td>{registration.endDateFormatted}</td>
                 <td>

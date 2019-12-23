@@ -24,6 +24,7 @@ const modalEffect = keyframes`
 
 export const Modal = styled.div`
   border-radius: 4px;
+  width: 480px;
   max-width: 480px;
   padding: 40px;
   background: #fff;
@@ -44,6 +45,7 @@ export const Modal = styled.div`
     color: #666666;
     font-size: 16px;
     line-height: 30px;
+    text-align: justify;
   }
 
   form {

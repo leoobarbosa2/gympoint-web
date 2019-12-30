@@ -19,6 +19,7 @@
 <p align="center">
   Em caso de download do projeto você precisará baixar as dependências: <br>
   Necessário: Yarn ou Npm instalados<br>
+  Você precisará também do backend do projeto, que está no seguinte repositório: https://github.com/leoobarbosa2/Desafio-03-node <br>
   Execute um dos comandos abaixo
   
   ```

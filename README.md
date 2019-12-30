@@ -13,6 +13,31 @@
 </p>
 
 <p align="center">
+  <strong>Instruções</strong>
+</p>
+
+<p align="center">
+  Em caso de download do projeto você precisará baixar as dependências: <br>
+  Necessário: Yarn ou Npm instalados<br>
+  Execute um dos comandos abaixo
+  
+  ```
+  
+  npm install
+  yarn
+  
+  ```
+  
+  E por fim, para iniciar o projeto, basta executar o comando abaixo:
+  
+  ```
+   yarn start
+   npm start
+  ```
+</p>
+
+
+<p align="center">
   <strong>Ferramentas</strong>
 </p>
 

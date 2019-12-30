@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { confirmAlert } from 'react-confirm-alert';
 import { MdCheckCircle } from 'react-icons/md';
 import { toast } from 'react-toastify';
 import { FaPlus } from 'react-icons/fa';
@@ -63,6 +64,22 @@ export default function Registration() {
       toast.error(err.response.data.error);
     }
   }
+  function confirmDelete(id) {
+    confirmAlert({
+      title: 'Confirmação de exclusão',
+      message: 'Você quer mesmo excluir essa matricula?',
+      buttons: [
+        {
+          label: 'Sim',
+          onClick: () => handleDelete(id),
+        },
+        {
+          label: 'Não',
+          onClick: () => {},
+        },
+      ],
+    });
+  }
 
   return (
     <>
@@ -120,7 +137,7 @@ export default function Registration() {
                 <td>
                   <button
                     type="button"
-                    onClick={() => handleDelete(registration.id)}
+                    onClick={() => confirmDelete(registration.id)}
                   >
                     apagar
                   </button>

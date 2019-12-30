@@ -4,7 +4,7 @@ import searchlogo from '../../assets/images/search.svg';
 
 export const Container = styled.div`
   div {
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 40px auto 0 auto;
     display: flex;
     justify-content: space-between;

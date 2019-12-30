@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { parseISO, addMonths } from 'date-fns';
+import { confirmAlert } from 'react-confirm-alert';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import { FaPlus } from 'react-icons/fa';
@@ -54,6 +54,23 @@ export default function Plans() {
     }
   }
 
+  function confirmDelete(id) {
+    confirmAlert({
+      title: 'Confirmação de exclusão',
+      message: 'Você quer mesmo excluir esse plano?',
+      buttons: [
+        {
+          label: 'Sim',
+          onClick: () => handleDelete(id),
+        },
+        {
+          label: 'Não',
+          onClick: () => {},
+        },
+      ],
+    });
+  }
+
   return (
     <>
       <ActionHeader>
@@ -98,7 +115,7 @@ export default function Plans() {
                   <Link to={`/plans/${plan.id}`}>editar</Link>
                 </td>
                 <td>
-                  <button type="button" onClick={() => handleDelete(plan.id)}>
+                  <button type="button" onClick={() => confirmDelete(plan.id)}>
                     apagar
                   </button>
                 </td>

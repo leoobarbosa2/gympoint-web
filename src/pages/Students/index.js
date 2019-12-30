@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { confirmAlert } from 'react-confirm-alert';
 import { Link } from 'react-router-dom';
 import { FaPlus } from 'react-icons/fa';
 import { toast } from 'react-toastify';
@@ -49,6 +50,23 @@ export default function Students() {
     } catch (err) {
       toast.error(err.response.data.error);
     }
+  }
+
+  function confirmDelete(id) {
+    confirmAlert({
+      title: 'Confirmação de exclusão',
+      message: 'Você quer mesmo excluir esse aluno?',
+      buttons: [
+        {
+          label: 'Sim',
+          onClick: () => handleDelete(id),
+        },
+        {
+          label: 'Não',
+          onClick: () => {},
+        },
+      ],
+    });
   }
 
   return (
@@ -102,7 +120,7 @@ export default function Students() {
                 <td>
                   <button
                     type="button"
-                    onClick={() => handleDelete(student.id)}
+                    onClick={() => confirmDelete(student.id)}
                   >
                     apagar
                   </button>

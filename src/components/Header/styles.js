@@ -7,7 +7,7 @@ export const Container = styled.div`
 `;
 
 export const Nav = styled.nav`
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
   height: 64px;
   display: flex;
